@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+</head>
+<body>
+    <script id="vertexShader" type="vertex">
+        uniform float u_time;
+        varying vec2 vUv;
+
+        void main() {
+            vUv = uv;
+
+            float x = sin(position.x * u_time) * sin(position.y * u_time);
+
+            // gl_Position = projectionMatrix * modelViewMatrix * vec4(x, position.yz, 1.0);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+
+    <script id="fragmentShader" type="fragment">
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        uniform vec2 u_mouse;
+        uniform sampler2D image;
+        varying vec2 vUv;
+
+        void main() {
+            vec2 st = gl_FragCoord.xy / u_resolution;
+            vec4 texture = texture2D(image, vUv);
+
+            // gl_FragColor = vec4(0.0, st.x, st.y, 1.0);
+            // gl_FragColor = vec4(0.0, u_mouse.x, u_mouse.y, 1.0);
+            gl_FragColor = vec4(texture.rgb, 1.0);
+        }
+    </script>
+
+    <script src="js/scripts.js" type="module"></script>
+</body>
+</html>
